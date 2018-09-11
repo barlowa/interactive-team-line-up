@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import CurrencyConverter from './components/currencyConverter'
+import GetFixtures from './components/getFixtures'
 
 class App extends Component {
   constructor(){
     super()
     this.state = {
-      source:'USD',
-      apikey:'85b00a0c39dc5422bedd9f60a0e83d57',
-      currencies:'GBP,EUR,CAD,USD',
-      format: '1',
+      source:'http://dev.webuildbots.ai:9123',
+      token:'eFExWCgsmCX066dKSsJVmGu2HUYATekkGFcxbgnIfjPTtQ67JZrWjDnmwS3dn93p',
     }
   }
 
@@ -18,16 +16,16 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">React Currency Converter</h1>
+          <h1 className="App-title">We Build Bots League</h1>
         </header>
-        <p className="App-intro">
-          <CurrencyConverter 
-            source={this.state.source}
-            apikey={this.state.apikey}
-            currencies={this.state.currencies}
-            format={this.state.format}
-          />
-        </p>
+          <div>
+            <GetFixtures 
+              source={this.state.source}
+              token={this.state.token}
+              endPoint={'fixtures'}
+              fixtureId={'1234567'}
+            />
+          </div>
       </div>
     );
   }
