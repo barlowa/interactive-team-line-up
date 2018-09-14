@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-
+import Pitch from '../components/pitch'
 class GetFixtures extends Component {
   constructor(){
     super()
     this.state = {
       loading: true,
       error: '',
-      match:{//put into match object, incase there is more than one match on the same day? tournament?
-        date:'',
-        location:'',  
-        awayTeam : [],
-        homeTeam : [],
-      }
     }
   }
 
@@ -35,9 +29,9 @@ class GetFixtures extends Component {
       this.setState({
         loading:false,
         match:{//put into match object, incase there is more than one match on the same day? tournament?
-          date:results.date,
+          date: new Date(results.date),
           location:results.location,  
-          awayTeam : results.teams.find((item) => {
+          awayTeam : results.teams.find((item) => {//splits up the home and away team
             return item.homeTeam === false
           }),
           homeTeam : results.teams.find((item) => {
@@ -61,15 +55,13 @@ class GetFixtures extends Component {
   }
 
   componentDidUpdate(prevProps){
-    //updates if the fixture id changes
+    //provisions for updates if the fixture id changes in the future and site is made more dynamic.
     if(prevProps.fixtureId !== this.props.fixtureId){
       this.fetchFixures()
     }
   }
 
   render() {
-   
-    
     if(this.state.loading || this.state.error){
       return(        
         <div>
@@ -79,29 +71,29 @@ class GetFixtures extends Component {
     }else{
       return(
       <div>
-        <div>date: {this.state.match.date} at {this.state.match.location}</div>
+        <div>{this.state.match.date.toLocaleDateString()} at {this.state.match.location}</div>
         <div>
           Home Team
-          {this.state.match.homeTeam.players.map((team,index)=>{
-            return(
-              <div key={index}>
-                <div>{team.playerId}</div>
-                <div>{team.position}</div>
-              </div>
-            )
-          })}
         </div>
         <div>
-          Away Team
-          {this.state.match.awayTeam.players.map((team,index)=>{
-            return(
-              <div key={index}>
-                <div>{team.playerId}</div>
-                <div>{team.position}</div>
-              </div>
-            )
-          })}
+          {this.state.match.homeTeam.name}
         </div>
+        <Pitch
+          match={this.state.match.homeTeam}
+          source = {this.props.source}
+          token = {this.props.token}
+        />
+        <div>
+          Away Team
+        </div>
+        <div>
+          {this.state.match.awayTeam.name}
+        </div>
+        <Pitch
+          match={this.state.match.awayTeam}
+          source = {this.props.source}
+          token = {this.props.token}
+        />
       </div>
       )
     }
